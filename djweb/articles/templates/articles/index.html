@@ -1,0 +1,17 @@
+{% extends 'main_style.html'%}
+
+{% block content %}
+
+{%if pending_count and user.is_authenticated%}
+    <div class="materialert info">
+        <div class="material-icons">info_outline</div>
+        You have a couple of articles that pending approval! Please use moderation mode.
+        <button type="button" class="close-alert">×</button>
+    </div>
+{%endif%}
+
+{% for i in articles %}
+    {% include 'articles/includes/card-template.html' %}
+{% endfor %}
+
+{% endblock %}

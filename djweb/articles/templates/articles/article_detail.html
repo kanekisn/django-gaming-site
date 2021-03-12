@@ -1,0 +1,86 @@
+{% extends 'articles/index.html' %}
+
+{% block title %}
+{{ article.title }} - {{block.super}}
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col s12">
+        <div class="card card-art">
+            <div class="card-content">
+                <div class = "section"> <span class="card-title">{{ article.title }}</span></div>
+                <div class = "divider"></div>
+                <div class = "section">
+                <p>{{article.body|safe}}</p>
+                </div>
+                <div class = "divider"></div>
+                <div class = "section">
+                    {{article.date_pub|timesince}} ago by <a href = "{%url 'profile_detail' article.author%}"> {{article.author}}</a> |
+                    {%for tag in article.tags.all%}
+                        <div class="chip">
+                            {{tag}}
+                        </div>
+                    {%endfor%}
+                    <div class = "section">
+                        <div class = "divider"></div>
+                        <br>
+                        {%if perms.articles.change_articles %}
+                            <a style = "color:black;" href="{{article.edit_url}}"><i class="material-icons">mode</i>Change</a>
+                            /
+                        {%endif%}
+                        {%if perms.articles.delete_articles%}
+                            <a style = "color:black;" href="{{article.delete_url}}"><i class="material-icons">delete</i>Delete</a>
+                        {%endif%}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {%if user.is_authenticated%}
+        <form method="POST">
+            <div class="col s8">
+                {% csrf_token %}
+                <div class="section input-field">
+                    {%if form.errors%}
+                        {{form.errors}}
+                    {%endif%}
+                    {{form}}
+                </div>
+            </div>
+            <div class = "col s2" style="margin-top: 43px;">
+                <button type="submit" class="btn waves-effect waves-light grey darken-3">Send<i
+                        class="material-icons right">send</i></button>
+            </div>
+        </form>
+    {%endif%}
+    <div class = "col s12">
+        {%if article.comments.all%}
+            <div class="card card-art">
+                <div class="card-content">
+                    {%for i in article.comments.all%}
+                        <div class="section valign-wrapper">
+                            <div class="col s1">
+                                <a href="{%url 'profile_detail' i.author%}"><img src="{{i.author.profile.img.url}}" height="300px;" width="300px;" class="circle responsive-img"/></a>
+                            </div>
+                            <div class="col s11">
+                                <div class = "section">
+                                    <span class="black-text"><h6>{{i.author.username}}</h6> {{i.date_pub|timesince}} ago</span>
+                                </div>
+                                <div class = "divider"> </div>
+                                <div class = "section"> 
+                                    <span class="black-text">{{i.content}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class = "divider"></div>
+                    {%endfor%}
+                </div>
+            </div>
+        {%else%}
+        Not comments yet...
+        {%endif%}
+    </div>
+</div>
+{% endblock %}

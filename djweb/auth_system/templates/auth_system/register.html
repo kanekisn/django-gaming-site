@@ -1,0 +1,52 @@
+{% extends 'main_style.html' %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col s8 offset-s2" style="margin-top: 30px;">
+    <div class="card">
+      <div class="card-content center">
+        <div class="materialert">
+            <i class="material-icons">check_circle</i> <span>Register:</span>
+        </div>
+
+        {% if user.is_authenticated %}
+          <div class="materialert error">
+            <div class="material-icons">error_outline</div>
+              You logged already! You dont have access for this page! This page for only unauthenticated users.
+            <button type="button" class="close-alert">×</button>
+          </div>
+        {% else %}
+        <form method="post">
+          {% csrf_token %}
+          {% for field in form %}
+
+            {%if field.errors %}
+              <div class="materialert error">
+                  <div class="material-icons">error_outline</div>
+                  {{field.errors}}
+                  <button type="button" class="close-alert">×</button>
+              </div>
+            {%endif%}
+          <div class="input-field col s12">
+            {%if field.name == "username"%}
+            <i class="material-icons prefix">account_circle</i>
+            {%elif field.name == "email"%}
+            <i class="material-icons prefix">alternate_email</i>
+            {%else%}
+            <i class="material-icons prefix">security</i>
+            {%endif%}
+            {{ field }}
+            <label for="{{field.id_for_label}}">{{field.label}}</label>
+          </div>
+          {% endfor %}
+          <button type="submit" class="btn waves-effect waves-light grey darken-3">Confirm<i class="material-icons right">send</i></button>
+          <input type="hidden" name="next" value="{{ next }}" />
+        </form>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

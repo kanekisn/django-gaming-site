@@ -1,0 +1,42 @@
+{% extends 'main_style.html' %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col s8 offset-s2" style="margin-top: 30px;">
+    <div class="card">
+      <div class="card-content center">
+        <div class="materialert">
+            <i class="material-icons">check_circle</i> <span>Servers add</span>
+        </div>
+        <form method="post">
+          {% csrf_token %}
+          {% for field in form %}
+
+            {%if field.errors %}
+              <div class="materialert error">
+                  <div class="material-icons">error_outline</div>
+                  {{field.errors}}
+                  <button type="button" class="close-alert">×</button>
+              </div>
+            {%endif%}
+          <div class="input-field col s12">
+            {%if field.name == 'ip'%}
+              <i class="material-icons prefix">reorder</i>
+            {%elif field.name == 'port' %}
+              <i class="material-icons prefix">reorder</i>
+            {%else%}
+              <i class="material-icons prefix">security</i>
+            {%endif%}
+            {{ field }}
+            <label for="{{field.id_for_label}}">{{field.label}}</label>
+          </div>
+          {% endfor %}
+          <button type="submit" class="btn waves-effect waves-light grey darken-3">Create<i class="material-icons right">send</i></button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,150 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	<!--Import Google Icon Font-->
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link type="text/css" rel="stylesheet" href="{% static 'css/style.css' %}" media="screen,projection" />
+	<link type="text/css" rel="stylesheet" href="{% static 'css/materialize.css' %}" media="screen,projection" />
+	<link type="text/css" rel="stylesheet" href="{% static 'css/cropper.css' %}" media="screen,projection" />
+
+	<title>{% block title %}New Site{%endblock%}</title>
+</head>
+
+
+<body>
+	<ul class="sidenav sidenav-fixed invesible-top">
+		<li><div class="user-view">
+		<div class="background">
+			<img class = "responsive-img" height="500px;" width="500px;" src="{{ MEDIA_URL }}/background.jpg">
+		</div>
+		{%if user.is_authenticated%}
+			<a href="{%url 'profile_detail' user%}"><img class="circle responsive-img z-depth-2" height="300px;" width="300px;" src="{{user.profile.img.url}}"></a>
+			<span class="white-text name">Welcome, {{user.username}}</span>
+			<span class="white-text email">{{user.email}}</span>
+		{%else%}
+			<img class="circle responsive-img" height="300px;" width="300px;" src="{{MEDIA_URL}}/avatar.jpg">
+			<div class = "section">
+				<span class="white-text name">Welcome, guest!</span>
+			</div>
+		{%endif%}
+		</div></li>
+		<li><a href="{% url 'Homepage' %}"><i class="material-icons">post_add</i>Articles</a></li>
+		<li><a href="{% url 'servers_list'%}"><i class="material-icons">videogame_asset</i>Servers</a></li>
+		{%if user.is_authenticated%}
+		<li><a href="{% url 'profile_detail' user %}"><i class="material-icons">assignment_ind</i>Profile</a></li>
+		<li><div class="divider"></div></li>
+		<li><a href="{% url 'logout'%}?next={{request.path}}"><i class="material-icons">logout</i>Logout</a></li>
+		{%else%}
+		<li><div class="divider"></div></li>
+		<li><a href="{% url 'login'%}?next={{request.path}}"><i class="material-icons">login</i>Login</a></li>
+		{%endif%}
+	</ul>
+	<header>
+		<div class= "navbar-fixed">
+			<nav class="grey darken-4">
+				<div class="nav-wrapper container">
+					<a href="#" class="brand-logo">PIKA</a>
+					<ul id="nav-mobile" class="right hide-on-med-and-down">
+						{%if user.is_authenticated%}
+							<li><a href="{%url 'article_create_url'%}" class="waves-effect waves-light btn-small grey darken-4">Send Post</a></li>
+							{% if perms.articles.can_approve %}
+								<li><a href="{%url 'article_requests_url'%}" class="waves-effect waves-light btn-small grey darken-4">
+								Pending{%if pending_count %}<span class="new badge red">{{pending_count}}</span>{%endif%}</a></li>
+							{%endif%}
+							<li>
+								<ul id="dropdown2" class="dropdown-content grey darken-4">
+									<li><a style = "color: white;" href="{%url 'admin_articles'%}">Articles</a></li>
+									<li><a style = "color: white;" href="{%url 'admin_users'%}">Users</a></li>
+									<li><a style = "color: white;" href="{%url 'admin_servers'%}">Servers</a></li>
+								</ul>
+								<a href = "" class="waves-effect waves-light btn-small dropdown-trigger grey darken-3" data-target="dropdown2"><i class="material-icons left">build</i>Admin panel</a>
+							</li>
+						{%endif%}
+					</ul>
+				</div>
+			</nav>
+		</div>
+	</header>
+
+
+	<main>
+		<div class="container">
+			{%block content%}
+			{%endblock%}
+		</div>
+
+		<div class="container">
+			<div class="row">
+				<div class="col s4 offset-s4">
+					{%if articles.end_index > 3 %}
+					<ul class="pagination">
+						{%if not articles.has_previous%}
+						<li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
+						{%else%}
+						<li class="waves-effect"><a href="?page={{articles.number|add:-1}}"><i
+									class="material-icons">chevron_left</i></a></li>
+						{%endif%}
+
+						{%for n in articles.paginator.page_range %}
+						{%if articles.number == n%}
+						<li class="active grey darken-3"><a href="?page={{n}}">{{n}}</a></li>
+						{%elif n > articles.number|add:-3 and n < articles.number|add:3 %} <li class="waves-effect"><a
+								href="?page={{n}}">{{n}}</a></li>
+							{%endif%}
+							{%endfor%}
+							{%if articles.has_next%}
+							<li class="waves-effect"><a href="?page={{articles.number|add:1}}"><i
+										class="material-icons">chevron_right</i></a></li>
+							{%else%}
+							<li class="disabled"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+							{%endif%}
+					</ul>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</main>
+
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script type="text/javascript" src="{% static 'js/materialize.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/cropper.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/jquery-cropper.js' %}"></script>
+	<script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
+	<script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>	
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			var elems_col = document.querySelectorAll('.collapsible');
+			var elems_date = document.querySelectorAll('.datepicker');
+			$('#modal1').modal();
+			M.Collapsible.init(elems_col);
+			M.Datepicker.init(elems_date);
+			M.AutoInit();
+		});
+		$(document).ready(function(){
+			$('.sidenav').sidenav("open", {
+				'preventScrolling' : false,
+			});
+
+			$('.close-alert').on('click', function() {
+				$(this).parent().fadeOut('slow'); 
+			});
+
+			M.AutoInit();
+		});
+
+		CKEDITOR.env.isCompatible = true;
+
+	</script>
+	{%block js%}{%endblock%}
+</body>
+	</div>
+</div>
+
+</html>

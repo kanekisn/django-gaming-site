@@ -1,0 +1,23 @@
+<div class = "row">
+    <div class = "col s12">
+        <div class="card card-art">
+            <div class="card-content">
+                <div class="col s2 section">
+                    <a href="{%url 'profile_detail' i.author%}"><img src="{{i.author.profile.img.url}}" height="300px;" width="300px;" class="circle responsive-img z-depth-2"/></a>
+                </div>
+                <div class="col s10 section">
+                    <span class="card-title"><b>{{i.title}}</b></span>
+                    <br>
+                    {{i.body|safe|truncatewords:50}}
+                </div>
+                <div class="divider"></div>
+            </div>
+            <div style = "margin-right:20px;" class = "section right-align">
+                    {{i.date_pub|timesince}} ago by {{i.author.username}}
+            </div>
+            <div class="card-action">
+                <a href="{{ i.get_absolute_url }}" class="waves-effect waves-light btn grey darken-3">Read more ></a>
+            </div>
+        </div>
+    </div>
+</div>

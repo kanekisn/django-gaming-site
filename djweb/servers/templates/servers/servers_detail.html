@@ -1,0 +1,65 @@
+{% extends 'main_style.html' %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col s12" style="margin-top: 30px;">
+    <div class="card">
+      <div class="card-content">
+        <div class = "divider"></div>
+        <div class = "valign-wrapper">
+            <div class = "section">
+                <img class = "responsive-img z-depth-2" width = "150px;" height="150px;" src="{{ MEDIA_URL }}/map.jpg">
+                <p>Players: <strong>{{server.player_count}} / {{server.max_players}}</strong></p>
+            </div>
+            <div style = "margin-left:30px; margin-bottom:10px;">
+                <strong>{{server.server_name}}</strong>
+                <div class = "divider"></div>
+                <div class = "section">
+                    <p>Address: <strong>{{addr}}</strong></p>
+                    <p>Current map: <strong>{{server.map_name}}</strong></p>
+                    <p>VAC: <strong>{%if server.vac_enabled %}Enabled{%else%}Disabled{%endif%}</strong></p>
+                </div>
+            </div>
+        </div>
+        <div class = "divider"></div>
+      </div>
+    </div>
+    <ul class="collapsible">
+        <li class = "active">
+            <div class="collapsible-header"><i class="material-icons">videogame_asset</i>Players</div>
+            <div class="collapsible-body">
+                {%if players%}
+                    <table class = "responsive-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Score</th>
+                                <th>Duration</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {%for i in players%}
+                                <tr>
+                                    {%if i.name %}
+                                        <td>{{i.name}}</td>
+                                    {%else%}
+                                        <td>Connecting...</td>
+                                    {%endif%}
+                                    <td>{{i.score}}</td>
+                                    <td>{{i.duration}}</td>
+                                </tr>
+                            {%endfor%}
+                        </tbody>
+                    </table>
+                {%else%}
+                    There's no players.
+                {%endif%}
+            </div>
+        </li>
+    </ul>
+  </div>
+</div>
+
+{% endblock %}

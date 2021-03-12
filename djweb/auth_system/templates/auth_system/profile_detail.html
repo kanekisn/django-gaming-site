@@ -1,0 +1,91 @@
+{%extends 'main_style.html'%}
+
+{%block content%}
+<div class="row">
+    <div class="col s8">
+        <div class="card card-art">
+            <div class="card-content center">
+                {%if success%}
+                <div class="materialert success">
+                    <div class="material-icons">check</div>
+                        Completed
+                    <button type="button" class="close-alert">×</button>
+                </div>
+                {%endif%}
+                <div class="section row">
+                    <div class = "col s4 offset-s4">
+                        <img src="{{ui.profile.img.url}}" height="300px;" width="300px;" class="circle responsive-img z-depth-2"/>
+                            {%if not ui.is_superuser%}
+                                {%if group%}
+                                    <span class="mark {{group}}">{{group}}</span>
+                                {%else%}
+                                    <span class="mark user">User</span>
+                                {%endif%}
+                            {%else%}
+                                <span class="mark admin">Admin</span>
+                            {%endif%}
+                        {%if ui.profile.is_online%}Online{%else%} Offline{%endif%}
+                        <br>
+                        {%if not ui.profile.is_online%}Last seen {{ui.profile.activity|timesince}} ago{%endif%}
+                    </div>
+                </div>
+                <div class="divider"></div>
+
+                <div class="section left-align">
+                    <p>Name: {{ui}}</p>
+                </div>
+                <div class="divider"></div>
+
+                <div class="section left-align">
+                    <p>Location: {%if ui.profile.location%}{{ui.profile.location}}{%else%}not specified{%endif%}</p>
+                </div>
+                <div class="divider"></div>
+
+                <div class="section left-align">
+                    <p>Birthdate: {%if ui.profile.birthdate%}{{ui.profile.birthdate}}{%else%}not specified{%endif%}</p>
+                </div>
+                <div class="divider"></div>
+
+                <div class = "section left-align">
+                    <p>Date joined: {{ui.date_joined|timesince}} ago</p>
+                </div>
+                <div class="divider"></div>
+                <br/>
+                {%if user == ui%}
+                <a href="{%url 'profile_update'%}" class="btn waves-effect waves-light grey darken-3">Edit<i
+                        class="material-icons right">send</i></a>
+                {%endif%}
+            </div>
+        </div>
+    </div>
+
+    <div class="col s4">
+        <ul class="collapsible card-art">
+            <li>
+                <div class="collapsible-header"><i class="material-icons">comment</i>Latest comments</div>
+                <div class="collapsible-body">
+                    {%for i in latest_comments%}
+                        <div class = "section">
+                            <a href="{{i.post.get_absolute_url}}"><p>[{{i.date_pub|timesince}} ago]</p></a> 
+                            <p>{{i.content|truncatewords:10}}</p>
+                        </div>
+                        <div class = "divider"></div>
+                    {%endfor%}
+                </div>
+            </li>
+            <li>
+                <div class="collapsible-header"><i class="material-icons">forum</i>Latest articles</div>
+                <div class="collapsible-body">                    
+                    {%for i in latest_posts%}
+                            <div class = "section">
+                                <a href="{{i.get_absolute_url}}"><p>[{{i.date_pub|timesince}} ago]</p></a> 
+                                <p>{{i.title|truncatewords:10}}</p>
+                            </div>
+                            <div class = "divider"></div>
+                    {%endfor%}
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+{%endblock%}

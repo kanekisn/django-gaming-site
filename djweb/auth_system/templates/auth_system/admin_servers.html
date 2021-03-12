@@ -1,0 +1,23 @@
+{%extends 'main_style.html' %}
+{% block content %}
+<div class="row">
+    <div class="col s12">
+        <div class="card card-art">
+            <div class="card-content">
+                <div class="section">
+                    <strong>Servers</strong>
+                    <div class = "right-align"><a style = "color:black;" href = "{%url 'servers_add'%}">Create</a></div>
+                </div>
+                <div class = "divider"></div>
+                {%for i in servers%}
+                    <div class="section">
+                        #{{i.id}} | {{i.ip}}:{{i.port}}
+                        <a style = "color:black;" href = "{%url 'servers_change' i.id%}">[Change]</a>
+                        <a style = "color:black;" href = "{%url 'servers_delete' i.id%}">[Delete]</a>
+                    </div>
+                {%endfor%}
+            </div>
+        </div>
+    </div>
+</div>
+{%endblock%}

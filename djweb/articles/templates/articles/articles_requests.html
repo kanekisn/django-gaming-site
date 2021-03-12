@@ -1,0 +1,72 @@
+{%extends 'main_style.html'%}
+
+{%block content%}
+<div class="row">
+    <div class="col s12">
+        <div class="card card-art">
+            <div class="card-content">
+                <form method="post">
+                    {% csrf_token %}
+                    {%if selected_items and not option%}
+                        <div class="materialert warning">
+                            <div class="material-icons">warning</div>
+                            Please choose an option!
+                            <button type="button" class="close-alert">×</button>
+                        </div>
+                    {%elif option and not selected_items%}
+                        <div class="materialert warning">
+                            <div class="material-icons">warning</div>
+                            Please choose an items!
+                            <button type="button" class="close-alert">×</button>
+                        </div>
+                    {%elif option and selected_items%}
+                        <div class="materialert success">
+                            <div class="material-icons">check</div>
+                            Completed
+                            <button type="button" class="close-alert">×</button>
+                        </div>
+                    {%else%}
+                        <div class="materialert">
+                            <i class="material-icons">check_circle</i> <span>Articles pending - Choose items</span>
+                            <button type="button" class="close-alert">×</button>
+                        </div>
+                    {%endif%}
+                    <div class="section">
+                        <button type="submit" id="approve-btn" class="btn waves-effect waves-light grey darken-3">GO<i
+                                class="material-icons right">send</i></button>
+                        <div class="col s3">
+                            <select name="select" id="id_select">
+                                <option value="" disabled selected>--Choose item--</option>
+                                <option value="1">Approve</option>
+                                <option value="2">Delete</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="section"></div>
+
+                    {%for i in articles%}
+                    <div class="section">
+                        <label>
+                            <input type="checkbox" value="{{i.id}}" name="article_id[]" id="approve" />
+                            <span style="padding-left: 0px;">
+                            </span>
+                        </label>
+                        <p>
+                            #{{i.id}} - {{i.title|truncatewords:50}} [{{i.date_pub|timesince}} ago] <a href="{{i.get_absolute_url}}">[View]</a>
+                        <p>
+                    </div>
+                    <div class="divider"></div>
+                    {%endfor%}
+                </form>
+                {%if not articles%}
+                <div class="divider"></div>
+                <div class="section">
+                    <h5>The list is empty!</h5>
+                </div>
+                <div class="divider"></div>
+                {%endif%}
+            </div>
+        </div>
+    </div>
+</div>
+{%endblock%}

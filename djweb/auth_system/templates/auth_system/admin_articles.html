@@ -1,0 +1,22 @@
+{%extends 'main_style.html' %}
+{% block content %}
+<div class="row">
+    <div class="col s12">
+        <div class="card card-art">
+            <div class="card-content">
+                <div class="section">
+                    <strong>Articles</strong>
+                </div>
+                <div class = "divider"></div>
+            {%for i in articles%}
+                <div class="section">
+                    #{{i.id}} | <strong><a style = "color:gray;" href = "{{ i.get_absolute_url }}">{{i.title}}</a></strong> 
+                    <a style = "color:black;" href = "{{i.edit_url}}">[Change]</a>
+                    <a style = "color:black;" href = "{{i.delete_url}}">[Delete]</a>
+                </div>
+            {%endfor%}
+            </div>
+        </div>
+    </div>
+</div>
+{%endblock%}

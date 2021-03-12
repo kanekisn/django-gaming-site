@@ -1,0 +1,115 @@
+{%extends 'main_style.html'%}
+
+{%block content%}
+<div class="row">
+    <div class="col s8 offset-s2">
+        <div class="card card-art">
+            <div class="card-content center">
+                <form enctype="multipart/form-data" method="post" id="id_form">
+                    {% csrf_token %}
+                    {% for field in form %}
+
+                    {%if field.errors %}
+                    {{field.errors}}
+                    {%endif%}
+                    <div class="input-field col s12">
+                        {%if field.name == 'birthdate'%}
+                        <label for="{{field.id_for_label}}">{{field.label}}</label>
+                            {{field}}
+                        {%elif field.name == 'location'%}
+                        <label for="{{field.id_for_label}}">{{field.label}}</label>
+                            {{ field }}
+                        {%elif field.name == 'img'%}
+                            <div class="section row">
+                                <div class = "col s8 offset-s2">
+                                    <img src="{{user.profile.img.url}}" height="200px;" width="200px;" class="circle responsive-img z-depth-2"/>
+                                </div>
+                            </div>
+                            <div class="file-field input-field">
+                                <div class="btn grey darken-3">
+                                    <i class="material-icons">panorama</i>
+                                    <input type="file" id="id_img" name="img" accept=".jpg, .jpeg, .png">
+                                </div>
+                                <div class="file-path-wrapper">
+                                    <input class="file-path validate" type="text">
+                                </div>
+                            </div>
+                        {%else%}
+                            {{field}}
+                        {%endif%}
+                    </div>
+                    {% endfor %}
+                    <div id="modal1" class="modal modal-fixed-footer">
+                        <div class="modal-content">
+                            <img id = "image" src="" style="max-width: 100%;"/>
+                        </div>
+                        <div class="modal-footer">
+                            <a id = "modal-btn" href="#!" class="btn waves-effect waves-light grey darken-3"><i
+                            class="material-icons right">send</i>Complete</a>
+                            <a id = "modal-btn1" href="#!" class="btn waves-effect waves-light grey darken-3"><i
+                            class="material-icons right">send</i>Close</a>
+                        </div>
+                    </div>
+                    <button id="confbtn" type="submit" class="btn waves-effect waves-light grey darken-3">Confirm<i
+                            class="material-icons right">send</i></button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{%endblock%}
+
+{%block js%}
+<script>
+$(function (){
+    $("#id_img").change(function () {
+    if (this.files && this.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            $("#image").attr("src", e.target.result);
+            $('#modal1').modal('open')
+        }
+        reader.readAsDataURL(this.files[0]);
+        }
+    });
+
+    var $image = $("#image");
+    var cropBoxData;
+    var canvasData;
+    $("#modal1").modal({
+    'dismissible' : false,
+    'onOpenStart' : function(){
+        $image.cropper({
+        viewMode: 1,
+        aspectRatio: 1/1,
+        minCropBoxWidth: 300,
+        minCropBoxHeight: 300,
+        ready: function () {
+            $image.cropper("setCanvasData", canvasData);
+            $image.cropper("setCropBoxData", cropBoxData);
+        }
+        });
+    },
+    'onCloseStart' : function(){
+        cropBoxData = $image.cropper("getCropBoxData");
+        canvasData = $image.cropper("getCanvasData");
+        var cropData = $image.cropper("getData");
+        $("#id_x").val(cropData["x"]);
+        $("#id_y").val(cropData["y"]);
+        $("#id_height").val(cropData["height"]);
+        $("#id_width").val(cropData["width"]);
+        $("#id_form").submit()
+        $image.cropper("destroy");
+    }, 
+    })
+
+    $("#modal-btn").click(function(){
+        $("#modal1").modal("close")
+    });
+
+    $("#modal-btn1").click(function(){
+        $("#modal1").modal("close")
+    });
+})
+</script>
+{%endblock%}

@@ -1,0 +1,29 @@
+{% extends 'articles/index.html' %}
+
+{% block title %}
+    Delete Article - {{block.super}}
+{% endblock title %}
+
+{% block content %}
+<div class="row">
+  <div class="col s8 offset-s2" style="margin-top: 30px;">
+    <div class="card">
+        <div class="card-content center">
+            <form action="{{darticles.delete_url}}" method="post">
+                {% csrf_token %}
+                <div class = "section">
+                    <h5>Are you sure that you want to delete article?</h5>
+                </div>
+                <div class = "divider"></div>
+                <div class = "section">
+                    {{darticles.title|title}}
+                </div>
+                <br>
+                <button type="submit" class="btn waves-effect waves-light grey darken-3">Delete<i
+                                    class="material-icons left">delete</i></button>
+                <a href="{{darticles.get_absolute_url}}" class="btn waves-effect waves-light grey darken-3">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

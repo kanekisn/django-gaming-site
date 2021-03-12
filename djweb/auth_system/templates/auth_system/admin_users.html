@@ -1,0 +1,20 @@
+{%extends 'main_style.html' %}
+{% block content %}
+<div class="row">
+    <div class="col s12">
+        <div class="card card-art">
+            <div class="card-content">
+                <div class="section">
+                    <strong>Users</strong>
+                </div>
+                <div class = "divider"></div>
+                {%for i in users%}
+                    <div class="section">
+                        #{{i.id}} | {{i.username}} [ban] [delete]
+                    </div>
+                {%endfor%}
+            </div>
+        </div>
+    </div>
+</div>
+{%endblock%}
